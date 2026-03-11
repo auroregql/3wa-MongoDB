@@ -1,0 +1,111 @@
+----------------------------------------------------
+Exercice 1 :
+----------------------------------------------------
+
+db.inventory.updateMany(
+   { status: { $in: ["C", "D"] } },
+   { $mul: { qty: 1.5 } }
+);
+
+
+----------------------------------------------------
+Exercice 2 :
+----------------------------------------------------
+
+db.inventory.updateMany(
+   { 
+      status: { $in: ["A", "B"] },
+      "tags.1": { $exists: true }
+   },
+   { 
+      $mul: { qty: 2.5 }
+   }
+);
+
+-----------------------------------------------------
+Exercice 3 :
+-----------------------------------------------------
+
+1. 
+
+db.inventory.updateMany(
+   { qty: { $gte: 75 } },
+   { $set: { scores: [19] } }
+);
+
+
+2. 
+
+db.inventory.updateMany(
+   { society: { $regex: /a/i } },
+   { $push: { scores: 11 } }
+);
+
+
+3.
+
+db.inventory.find(
+   { scores: 11 }
+);
+
+
+4.
+
+db.inventory.updateMany(
+   { society: "Alex" },
+   { $set: { comment: "Hello Alex" } }
+);
+
+
+5.
+
+db.inventory.find(
+   { comment: { $exists: false } }
+);
+
+-------------------------------------------------
+Exercice 4 : 
+-------------------------------------------------
+
+1.
+
+db.inventory.find(
+   { level: { $exists: true } }
+);
+
+
+2.
+
+db.inventory.updateMany(
+   { level: { $exists: true } },
+   { $unset: { level: "" } }
+);
+
+
+3.
+
+db.inventory.find(
+   { level: { $exists: true } }
+);
+
+
+--------------------------------------------------
+Exercice Switch
+--------------------------------------------------
+
+db.inventory.updateMany(
+   { tags: { $exists: true } },
+   [
+     { $set: { 
+         label: { 
+           $switch: {
+             branches: [
+               { case: { $gt: [ { $size: "$tags" }, 3 ] }, then: "AA" },
+               { case: { $gt: [ { $size: "$tags" }, 1 ] }, then: "A" }
+             ],
+             default: "B"
+           }
+         }
+     }}
+   ]
+);
