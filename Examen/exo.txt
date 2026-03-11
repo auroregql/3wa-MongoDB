@@ -1,0 +1,99 @@
+Exercice 1
+
+db.inventory.find(
+   { "tags.0": { $exists: true } },
+   { society: 1, tags: 1, _id: 0 }
+);
+
+Exercice 2 
+
+
+db.inventory.find(
+   {
+      $and: [
+         { $or: [ { status: "A" }, { type: "journal" } ] },
+         { qty: { $lt: 100 } }
+      ]
+   },
+   { society: 1, _id: 0 }
+);
+
+
+Exercice 3 :
+
+
+db.inventory.find(
+   { society: { $regex: /^A/ } },
+   { type: 1, _id: 0 }
+);
+
+
+Exercice 4 :
+
+db.inventory.find(
+   { year: { $gte: 2018 } },
+   { society: 1, qty: 1, _id: 0 }
+);
+
+
+Exercice 5 :
+
+db.inventory.find(
+   { tags: "blank" },
+   { society: 1, _id: 0 }
+);
+
+
+Exercice 6 :
+
+db.inventory.find(
+   { qty: { $gt: 45, $lte: 90 } },
+   { society: 1, _id: 0 }
+);
+
+
+Exercice 7 :
+
+db.inventory.find(
+   { qty: { $gt: 45 } },
+   { society: 1, _id: 0 }
+);
+
+
+Exercice 8 : 
+
+db.inventory.find(
+   { type: "journal" }
+);
+
+
+var totalQty = 0;
+
+db.inventory.find({ type: "journal" }).forEach(function(doc) {
+    totalQty += doc.qty;
+});
+
+print("Quantité totale des journaux :", totalQty);
+
+
+
+Exercice 9 :
+
+db.inventory.find(
+   {
+      $and: [
+         { price: { $in: [0.99, 1.99] } },
+         { $or: [ { sale: true }, { qty: { $lt: 45 } } ] }
+      ]
+   },
+   { type: 1, _id: 0 }
+);
+
+
+
+Exercice 10 :
+
+db.inventory.find(
+   { $or: [ { status: "A" }, { type: "journal" } ] },
+   { society: 1, _id: 0 }
+);
