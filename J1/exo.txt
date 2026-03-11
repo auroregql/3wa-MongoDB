@@ -1,0 +1,203 @@
+------------------------------------------------------------------
+Exercice 1 : Compter le nombre de restaurent a Brooklyn
+------------------------------------------------------------------
+
+let count = 0; 
+db.restaurants.find({ borough: "Brooklyn" }).forEach((doc) => count++);
+print(count);
+
+resultat = 6086
+
+
+db.restaurants.find({ borough: "Brooklyn" }).count();
+
+resultat = 6086
+
+
+------------------------------------------------------------------
+Exercice 2 : Inserer un nouveau restaurants
+------------------------------------------------------------------
+
+db.restaurants.insertOne({
+  _id: ObjectId(45872563),
+  name: "Freshly Burger",
+  cuisine : "Burgers",
+  borough : "Brooklyn",
+  address : {
+    building : "165",
+    street : "Farragut Road",
+    },
+ grade : [
+  {
+  date : new Date("2015-04-03"),
+  grade : "A+",
+  score : 15
+  },
+  {
+  date : new Date("2021-06-06"),
+  grade : "A++",
+  score : 18
+  }
+ ]
+});
+
+
+Resultat : acknowledged: true,
+  insertedId: ObjectId("699c341f3554bac45596b5c4")
+  
+-------------------------------------------------------------------------------- 
+Exercice 3 : donner seulement les noms des restaurents ayant eu un score de 20
+--------------------------------------------------------------------------------
+
+db.restaurants.find(
+  { "grades.score": 20 }, 
+  { "name": 1, "_id": 0 }
+)
+
+
+Resultat : 
+
+[
+  { name: 'Tov Kosher Kitchen' },
+  { name: 'P & S Deli Grocery' },
+  { name: 'Spoon Bread Catering' },
+  { name: 'Gottscheer Hall' },
+  { name: 'Cafe Atelier (Art Students League)' },
+  { name: "Labetti'S Post # 2159" },
+  { name: "Panchito'S" },
+  { name: "Reynold'S Bar" },
+  { name: "Joyce'S Tavern" },
+  { name: "Nancy'S Fire Side" },
+  { name: 'Hop Kee Restaurant' },
+  { name: "Denino'S Pizzeria Tavern" },
+  { name: "Michael'S Restaurant" },
+  { name: "Lenihan'S Saloon" },
+  { name: 'Jardin De China Rest' },
+  { name: "Gray'S Papaya" },
+  { name: "Tony'S Pizzeria" },
+  { name: "Schaffer'S Tavern" },
+  { name: "Mcdonald'S" },
+  { name: 'Raccoon Lodge' }
+]
+Type "it" for more
+
+
+
+Exercices requete :
+-------------------------------------------------------------
+Exercice 1 :
+-------------------------------------------------------------
+
+db.restaurants.find(
+  { "cuisine": "Italian", "grades.score": { "$gte": 10 } },
+  { "name": 1, "grades.score": 1, "address.coord": 1, "_id": 0 }
+).sort({ "name": -1 })
+
+
+-------------------------------------------------------------
+Exercice 2 :
+-------------------------------------------------------------
+
+db.restaurants.find(
+  { "grades": { "$elemMatch": { "grade": "A", "score": { "$gte": 20 } } } },
+  { "name": 1, "_id": 0 }
+).sort({ "name": -1 })
+
+--------------------------------------------------------------
+Exercice 3 :
+--------------------------------------------------------------
+
+db.restaurants.distinct("borough")
+
+---------------------------------------------------------------
+Exercice 4 :
+---------------------------------------------------------------
+
+db.restaurants.distinct("cuisine", { "borough": "Bronx" })
+
+----------------------------------------------------------------
+Exercice 5 :
+----------------------------------------------------------------
+
+db.restaurants.find({
+  "borough": "Bronx",
+  "grades": { "$size": 4 }
+})
+
+----------------------------------------------------------------
+Exercice 6 :
+----------------------------------------------------------------
+
+db.restaurants.find({
+  "borough": "Bronx",
+  "grades.grade": { $in: ["A", "B"] }
+})
+
+----------------------------------------------------------------
+Exercice 7 :
+----------------------------------------------------------------
+
+db.restaurants.find({
+  "borough": "Bronx",
+  "grades.0.grade": { "$in": ["A", "B"] }
+})
+
+---------------------------------------------------------------
+Exercice 8 :
+---------------------------------------------------------------
+
+db.restaurants.find({
+  "name": /[cC]offee/
+})
+
+---------------------------------------------------------------
+Exercice 9 :
+---------------------------------------------------------------
+
+
+db.restaurants.find({
+  "borough": "Bronx",
+  "name": /[cC]offee/
+})
+
+
+-----------------------------------------------------------------
+Exercice 10 :
+-----------------------------------------------------------------
+
+db.restaurants.find({
+  $and: [
+    { $or: [ { "name": /Coffee/i }, { "name": /Restaurant/i } ] },
+    { "name": { $not: /Starbucks/i } }
+  ]
+})
+
+
+db.restaurants.find({
+  $and: [
+    { "borough": "Bronx" },
+    { $or: [ { "name": /Coffee/i }, { "name": /Restaurant/i } ] },
+    { "name": { $not: /Starbucks/i } }
+  ]
+})
+
+
+-------------------------------------------------------------------
+Exercice 11 :
+-------------------------------------------------------------------
+
+db.restaurants.find({
+  "name": /coffee/i,
+  "borough": { "$in": ["Bronx", "Brooklyn"] },
+  "grades": { "$size": 4 }
+})
+
+--------------------------------------------------------------------
+Exercice 12 : 
+--------------------------------------------------------------------
+
+db.restaurants.find(
+  { "name": /^[aeiouy].*[aeiouy]$/i },
+  { "name": 1, "_id": 0 }
+)
+
